@@ -20,37 +20,49 @@ It implements secure APIs for `ADMIN` and `CUSTOMER` roles using Spring Security
 ### End-to-End Flow Structure
 
 ```text
-1️⃣ User Registration
-    Client  -->  POST /api/register  -->  AuthController.register()
-                                         Password encoded and user saved
-                                         Response: Success message
+START: User interacts with the application
 
-2️⃣ User Login
-    Client  -->  POST /api/login  -->  AuthController.login()
-                                         AuthenticationManager validates credentials
-                                         JWT token generated and returned
-    Client stores JWT token
+1️⃣ Registration & Login
+    Client --> POST /api/register --> AuthController.register()
+        - Checks if username exists
+        - Encodes password and saves user
+        - Response: "USER SUCCESSFULLY REGISTERED."
+    Client --> POST /api/login --> AuthController.login()
+        - AuthenticationManager validates credentials
+        - JWT token generated and returned
+        - Client stores JWT token
 
-3️⃣ Access Secured Endpoints
-    Client  -->  Request with Authorization: Bearer <JWT>
-                 └─> JwtAuthFilter
-                        - Validates JWT
-                        - Sets SecurityContext with user and roles
-                     └─> SecurityConfig.requestMatchers()
-                            - URL-level access check (ADMIN / CUSTOMER / PUBLIC)
-                         └─> Controller Method
-                                - @PreAuthorize checks method-level roles (if applied)
-                             └─> Response returned to client
+2️⃣ Common Access
+    Client --> GET /api/common/ --> CommonController
+        - Accessible by both CUSTOMER and ADMIN
+        - Response: "Hi.. Hello, This is From Common Controller"
 
-4️⃣ Example Access
-    - /api/admin/** → ADMIN only 
-      [Endpoints protected via requestMatchers in SecurityFilterChain]
-    - /api/customer/** → CUSTOMER only 
-      [Endpoints protected via requestMatchers in SecurityFilterChain]
-    - /api/MethodBased/Auth/both → ADMIN & CUSTOMER via @PreAuthorize
-    - /api/MethodBased/Auth/customer → CUSTOMER via @PreAuthorize
-    - /api/MethodBased/Auth/admin → ADMIN via @PreAuthorize
-    - /api/common/** → Public access, no authorization required
+3️⃣ Admin Access
+    Client --> GET /api/admin/ --> AdminController
+        - Accessible only by ADMIN
+        - Response: "Admin Controller"
+    Client --> GET /api/admin/user/{userId} --> AdminController
+        - Fetch user details by ID
+    Client --> GET /api/admin/user/{userName} --> AdminController
+        - Fetch user details by username
+
+4️⃣ Customer Access
+    Client --> GET /api/customer/ --> CustomerController
+        - Accessible only by CUSTOMER
+        - Response: "Customer Controller"
+
+5️⃣ Method-Based Authorization
+    Client --> GET /api/MethodBased/Auth/customer --> MethodBasedAuthorizationController
+        - Accessible only by CUSTOMER
+        - Response: "METHOD BASED AUTHORIZATION FOR CUSTOMER"
+    Client --> GET /api/MethodBased/Auth/admin --> MethodBasedAuthorizationController
+        - Accessible only by ADMIN
+        - Response: "METHOD BASED AUTHORIZATION FOR ADMIN"
+    Client --> GET /api/MethodBased/Auth/both --> MethodBasedAuthorizationController
+        - Accessible by both ADMIN and CUSTOMER
+        - Response: "METHOD BASED AUTHORIZATION FOR BOTH"
+
+END
 
 ---
 ## Features
