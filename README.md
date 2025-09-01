@@ -105,5 +105,3 @@ It implements secure APIs for `ADMIN` and `CUSTOMER` roles using Spring Security
 |--------|---------------|------------------------|
 | GET    | /api/common/  | PUBLIC (all roles)     |
 
-git clone https://github.com/your-username/spring-security-jwt-monolith.git
-cd spring-security-jwt-monolith
