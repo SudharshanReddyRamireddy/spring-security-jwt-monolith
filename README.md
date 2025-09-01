@@ -17,19 +17,21 @@ It implements secure APIs for `ADMIN` and `CUSTOMER` roles using Spring Security
 ---
 
 
-## **END - TO FLOW**
-1️⃣ **User Registration**
+### End-to-End Flow Structure
+
+```text
+1️⃣ User Registration
     Client  -->  POST /api/register  -->  AuthController.register()
                                          Password encoded and user saved
                                          Response: Success message
 
-2️⃣ **User Login**
+2️⃣ User Login
     Client  -->  POST /api/login  -->  AuthController.login()
                                          AuthenticationManager validates credentials
                                          JWT token generated and returned
     Client stores JWT token
 
-3️⃣ **Access Secured Endpoints**
+3️⃣ Access Secured Endpoints
     Client  -->  Request with Authorization: Bearer <JWT>
                  └─> JwtAuthFilter
                         - Validates JWT
@@ -39,19 +41,16 @@ It implements secure APIs for `ADMIN` and `CUSTOMER` roles using Spring Security
                          └─> Controller Method
                                 - @PreAuthorize checks method-level roles (if applied)
                              └─> Response returned to client
-**
-4️⃣ **Example Access**
-    - /api/admin/ → ADMIN only  [in this controller has only admin access end points that to implement authrization via RequestMatchers at SecurityFilterChain]
-    - /api/customer/** → CUSTOMER only [in this controller has only customer access end points that to implement authrization via RequestMatchers at SecurityFilterChain]
-    - /api/MethodBased/Auth/both → ADMIN & CUSTOMER **via @PreAuthorize*
-    - /api/MethodBased/Auth/customer → CUSTOMER  **via @PreAuthorize*
-    - /api/MethodBased/Auth/admin → ADMIN  **via @PreAuthorize*
-    - /api/common/** → Public access, means authanication required ** NO Authorization** 
 
-
-
-
-
+4️⃣ Example Access
+    - /api/admin/** → ADMIN only 
+      [Endpoints protected via requestMatchers in SecurityFilterChain]
+    - /api/customer/** → CUSTOMER only 
+      [Endpoints protected via requestMatchers in SecurityFilterChain]
+    - /api/MethodBased/Auth/both → ADMIN & CUSTOMER via @PreAuthorize
+    - /api/MethodBased/Auth/customer → CUSTOMER via @PreAuthorize
+    - /api/MethodBased/Auth/admin → ADMIN via @PreAuthorize
+    - /api/common/** → Public access, no authorization required
 
 ---
 ## Features
