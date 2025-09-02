@@ -43,7 +43,8 @@ public class AuthController {
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@RequestBody User req) throws BadRequestException {
 		Optional<User> isUserNameExist = userRepo.findByUsername(req.getUsername());
-		if (isUserNameExist.isPresent()) {
+	
+		if (isUserNameExist.isPresent() && isUserNameExist.get().getRole().name().equalsIgnoreCase(req.getRole().name())) {
 			throw new BadRequestException("ERROR : USERNAME " + req.getUsername() + " ALREADY EXISTS.");
 		} else {
 			req.setPassword(encoder.encode(req.getPassword()));

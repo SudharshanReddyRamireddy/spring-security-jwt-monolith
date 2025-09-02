@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/MethodBased/Auth")
 public class MethodBasedAuthorizationController {
 	
+	
 	@PreAuthorize("hasRole('CUSTOMER')")
 	@GetMapping("/customer")
 	public String M_Customer() {

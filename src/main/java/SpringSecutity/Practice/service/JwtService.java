@@ -25,7 +25,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    // ✅ Generate token with all roles
+    // Generate token with all roles
     public String generateToken(UserDetails user) {
         long now = System.currentTimeMillis();
 
