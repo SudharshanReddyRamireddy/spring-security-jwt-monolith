@@ -3,23 +3,28 @@ package SpringSecutity.Practice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
+
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class User implements UserDetails, Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)
@@ -27,32 +32,25 @@ public class User implements UserDetails, Serializable {
 
     private String password;
 
-    // Use Enum for roles for type safety
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    // Many-to-Many relationship with roles
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
-    // --- UserDetails mapping ---
-    /* this GrantedAuthority -> getAuthorities() is used in jwtService while generating Token,
-     * while Generating Token, Roles will include in the token, because of @PreAuthorize() will check ROLE From Token only
-     */
-    
-    @Override 
+    // --- UserDetails methods ---
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name())); // Why Prefix "ROLE_" added to role, 
+        return roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                    .collect(Collectors.toSet());
     }
-    
-    
 
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
-
-    // Enum for roles
-    public enum Role {
-        ADMIN,
-        CUSTOMER,
-        USER
-    }
 }

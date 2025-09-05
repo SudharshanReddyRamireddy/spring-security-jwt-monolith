@@ -2,6 +2,9 @@ package SpringSecutity.Practice.config;
 
 
 import SpringSecutity.Practice.filter.JwtAuthFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,6 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+	private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
+	
     private final JwtAuthFilter jwtAuthFilter;
     
 
@@ -42,6 +47,7 @@ public class SecurityConfig {
     // 🔹 Security filter chain
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    	log.info("security filter chain..... started");
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/register", "/api/login").permitAll()

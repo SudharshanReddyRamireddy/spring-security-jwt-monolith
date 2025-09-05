@@ -2,13 +2,14 @@ package SpringSecutity.Practice.controller;
 
 
 
-import org.apache.coyote.BadRequestException;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import SpringSecutity.Practice.model.User;
+import SpringSecutity.Practice.DTOs.User_Response_Body;
 import SpringSecutity.Practice.service.AdminServices;
 
 @RestController
@@ -26,27 +27,35 @@ public class AdminController {
     
     
     
-    @GetMapping("/user/{userId}") // THIS API CAN ABLE TO ACCES ONLY ADMIN
-    public ResponseEntity<User> getUserById(@PathVariable("userId") Long userId) throws BadRequestException{
-    	try {
-			return ResponseEntity.status(HttpStatus.OK).body(adminServices.getUserById(userId));
-		} catch (Exception e) {
-			throw new BadRequestException("ERROR : " + e.getMessage());
-		}
+    // Method to handle for fetched User by used id
+    @GetMapping("/userId/{userId}") // THIS API CAN ABLE TO ACCES ONLY ADMIN
+    public ResponseEntity<User_Response_Body> getUserById(@PathVariable("userId") Long userId){
+    	
+    	User_Response_Body response = User_Response_Body.builder()
+    									.status(HttpStatus.OK)
+    									.message("USER DETAILS FETCHED SECCUSSFULLY")
+    									.body(adminServices.getUserById(userId))
+    									.build();
+    	
+    	return ResponseEntity.ok(response);
     }
     
     
     
     
-    @GetMapping("/user/{userName}") // THIS API CAN ABLE TO ACCES ONLY ADMIN
-    public ResponseEntity<User> getUserByuserName(@PathVariable("userName") String userName) throws BadRequestException{
-    	try {
-			return ResponseEntity.status(HttpStatus.OK).body(adminServices.getUserByUserName(userName));
-		} catch (Exception e) {
-			throw new BadRequestException("ERROR : " + e.getMessage());
-		}
+    
+    // the method which is handle to fetch user by username
+    @GetMapping("/userName/{userName}") // THIS API CAN ABLE TO ACCES ONLY ADMIN
+    public ResponseEntity<User_Response_Body> getUserByuserName(@PathVariable("userName") String userName){
+    	User_Response_Body response = User_Response_Body.builder()
+				.status(HttpStatus.OK)
+				.message("USER DETAILS FETCHED SECCUSSFULLY")
+				.body(adminServices.getUserByUserName(userName))
+				.build();
+    	return ResponseEntity.ok(response);
     }
     
     
+    //Update Existing User Details
     
 }
