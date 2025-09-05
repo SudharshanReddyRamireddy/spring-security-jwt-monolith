@@ -1,7 +1,10 @@
 # Spring Security JWT Monolith
 
 A **Spring Boot monolith project** demonstrating **JWT-based authentication** and **role-based authorization**.  
-Supports both **URL-level security** (`requestMatchers`) and **method-level security** (`@PreAuthorize`).
+Supports both **URL-level security** (`requestMatchers`) and **method-level security** (`@PreAuthorize`).  
+
+> **Note:** This POC’s main focus is **Spring Security with stateless JWT-based authentication and authorization**.  
+> All API endpoints are primarily implemented to **demonstrate and test authentication & authorization flows**. Business logic is minimal and secondary.
 
 ---
 
@@ -42,9 +45,6 @@ Represents a role assigned to a user (e.g., ADMIN, CUSTOMER).
 - **User ↔ Role**: Many-to-Many  
   - A user can have multiple roles  
   - A role can be assigned to multiple users  
-
-**ER Diagram (optional)**  
-![ER Diagram](path/to/er-diagram.png)  
 
 ---
 
@@ -115,9 +115,9 @@ Represents a role assigned to a user (e.g., ADMIN, CUSTOMER).
 ---
 
 ## Notes
+- This POC’s **main focus is security**: JWT-based stateless authentication and role-based authorization.  
 - JWT blocklist prevents reuse of logged-out tokens  
 - Scheduler automatically cleans blocked tokens  
 - Centralized exception handling improves API error responses  
 - SLF4J logs provide authentication and authorization traceability  
-
-> **Note:** These APIs are implemented for practice. The main focus is **JWT authentication**, **role-based authorization**, and **secure API flows**.
+- All APIs exist primarily to **test security flows**; business logic is minimal.
